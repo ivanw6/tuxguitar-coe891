@@ -1,3 +1,4 @@
+package app.tuxguitar.song.models.LogicBasedTests;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import app.tuxguitar.song.models.TGTuning;

@@ -36,6 +36,32 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>3.3.0</version>
 				</plugin>
+				<plugin>
+				  <groupId>org.pitest</groupId>
+				  <artifactId>pitest-maven</artifactId>
+				  <version>1.16.2</version>
+				  <dependencies>
+				    <dependency>
+				      <groupId>org.pitest</groupId>
+				      <artifactId>pitest-junit5-plugin</artifactId>
+				      <version>1.2.1</version>
+				    </dependency>
+				  </dependencies>
+				  <configuration>
+				    <targetClasses>
+				        <param>app.tuxguitar.song.models.TGDuration</param>
+				        <param>app.tuxguitar.song.models.TGNote</param>
+				        <param>app.tuxguitar.song.models.TGString</param>
+				        <param>app.tuxguitar.song.models.TGTimeSignature</param>
+				        <param>app.tuxguitar.song.models.TGVoice</param>
+				        <param>app.tuxguitar.song.models.TGColor</param>
+				        <param>app.tuxguitar.song.models.TGStroke</param>
+				    </targetClasses>
+				    <targetTests>
+				        <param>app.tuxguitar.song.models.MutationTests.MutationTest</param>
+				    </targetTests>
+				  </configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

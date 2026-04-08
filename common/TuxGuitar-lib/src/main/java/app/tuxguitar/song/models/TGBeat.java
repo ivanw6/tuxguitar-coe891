@@ -6,19 +6,15 @@ package app.tuxguitar.song.models;
 import app.tuxguitar.song.factory.TGFactory;
 
 /**
+ *
  * @author julian
  */
-
-// Comparable: to be able to sort beats per start value
 public abstract class TGBeat implements Comparable<TGBeat> {
 
 	public static final int MAX_VOICES = 2;
 
 	/*
-	 * beat start can be defined under 2 different formats:
-	 * - start: legacy, can lead to rounding errors
-	 * - preciseStart: with absolute precision. Warning, may not always be defined (negative if not defined)
-	 * None of these values consider repeats. They only consider previous measures (i.e. measures with lower measure numbers) and beats
+	 * doc 1
 	 */
 	private long start;
 	private Long preciseStart;
@@ -29,6 +25,10 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 	private TGStroke stroke;
 	private TGPickStroke pickStroke;
 
+	/*
+	 * doc 1
+	 * @param TGFactory
+	 */
 	public TGBeat(TGFactory factory) {
 		this.preciseStart = TGDuration.getPreciseStartingPoint();
 		this.start = TGDuration.getStartingPoint();
@@ -40,14 +40,29 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		}
 	}
 
+	/**
+	 * doc
+	 *
+	 * @return TGMeasure 
+	 */
 	public TGMeasure getMeasure() {
 		return this.measure;
 	}
 
+	/**
+	 * doc
+	 *
+	 * @param TGMeasure
+	 */
 	public void setMeasure(TGMeasure measure) {
 		this.measure = measure;
 	}
 
+	/**
+	 * doc
+	 *
+	 * @return the start time of this beat
+	 */
 	public long getStart() {
 		// prefer precise start if available
 		if (this.preciseStart != null) {
@@ -56,21 +71,24 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		return this.start;
 	}
 
+	/**
+	 * doc
+	 * @return the precise start
+	 */
 	public Long getPreciseStart() {
 		return this.preciseStart;
 	}
-	
+
 	/**
-	 * Deprecated: define beat "approximative" start
-	 * 
-	 * Resolution of beat start = one midi tick, not precise enough to handle all possible tuplets
-	 * Only use for legacy purposes (e.g. import old/foreign file formats)
-	 * When this method needs to be called (for historical reasons), make sure to update preciseStart attribute afterwards
-	 * Dedicated methods are available for that in TGMeasureManager
-	 * 
-	 * Replace by .setPreciseStart (refer to TGDuration)
-	 * 
-	 * @param start
+	 * Deprecated: sets the approximate start time of this beat using legacy midi-tick resolution.
+	 *
+	 * Resolution of beat start equals one midi tick, which is not precise enough to handle
+	 * all possible tuplets. Only use for legacy purposes (e.g. importing old or foreign file formats).
+	 * When this method is called, make sure to update preciseStart afterwards using dedicated
+	 * methods available in TGMeasureManager.
+	 *
+	 * @param start the approximate start time in midi ticks
+	 * @deprecated replaced by {@link #setPreciseStart(long)}
 	 */
 	@Deprecated
 	public void setStart(long start) {
@@ -79,11 +97,22 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		this.preciseStart = null;
 	}
 
+	/**
+	 * Doc
+	 *
+	 * @param pStart
+	 */
 	public void setPreciseStart(long pStart) {
 		this.preciseStart = pStart;
 		this.start = TGDuration.toTime(pStart);
 	}
 
+	/**
+	 * doc
+	 *
+	 * @param index 
+	 * @param voice
+	 */
 	public void setVoice(int index, TGVoice voice){
 		if( index >= 0 && index < this.voices.length ){
 			this.voices[index] = voice;
@@ -91,6 +120,12 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		}
 	}
 
+	/**
+	 * Doc
+	 *
+	 * @param index 
+	 * @return TGVoice or null
+	 */
 	public TGVoice getVoice(int index){
 		if( index >= 0 && index < this.voices.length ){
 			return this.voices[index];
@@ -98,6 +133,11 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		return null;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return the highest fret number
+	 */
 	public int getHighestFret() {
 		int highestFret = -1;
 		for (int i=0; i<this.countVoices(); i++) {
@@ -107,56 +147,117 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		return highestFret;
 	}
 
+	/**
+	 * Doc
+	 *
+	 * @return the number of voices
+	 */
 	public int countVoices(){
 		return this.voices.length;
 	}
 
+	/**
+	 * Doc
+	 *
+	 * @param chord the TGChord 
+	 */
 	public void setChord(TGChord chord) {
 		this.chord = chord;
 		this.chord.setBeat(this);
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return the TGChord of this beat, or null
+	 */
 	public TGChord getChord() {
 		return this.chord;
 	}
 
+	/**
+	 *  Doc
+	 */
 	public void removeChord() {
 		this.chord = null;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return the TGText
+	 */
 	public TGText getText() {
 		return this.text;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @param text the TGText
+	 */
 	public void setText(TGText text) {
 		this.text = text;
 		this.text.setBeat(this);
 	}
 
+	/**
+	 *  Doc
+	 */
 	public void removeText(){
 		this.text = null;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return true else false
+	 */
 	public boolean isChordBeat(){
 		return ( this.chord != null );
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return true else false
+	 */
 	public boolean isTextBeat(){
 		return ( this.text != null );
 	}
 
+	/**
+	 * R Doc
+	 *
+	 * @return the TGStroke
+	 */
 	public TGStroke getStroke() {
 		return this.stroke;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return the TGPickStroke
+	 */
 	public TGPickStroke getPickStroke() {
 		return this.pickStroke;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return true else false
+	 */
 	public boolean isPickStroke() {
 		return (this.pickStroke.getDirection() != TGPickStroke.PICK_STROKE_NONE);
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @return true else false
+	 */
 	public boolean isRestBeat(){
 		for(int v = 0; v < this.countVoices() ; v ++ ){
 			TGVoice voice = this.getVoice( v );
@@ -167,6 +268,9 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		return true;
 	}
 
+	/**
+	 *  Doc
+	 */
 	public void resetAltEnharmonic() {
 		for(int v = 0; v < this.countVoices() ; v ++ ){
 			TGVoice voice = this.getVoice( v );
@@ -174,6 +278,11 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		}
 	}
 
+	/** 
+	 *  Doc
+	 * @param beat
+	 * @param factory
+	 */
 	public void copyFrom(TGBeat beat, TGFactory factory) {
 		if (beat.getPreciseStart() != null) {
 			this.setPreciseStart(beat.getPreciseStart());
@@ -193,12 +302,24 @@ public abstract class TGBeat implements Comparable<TGBeat> {
 		}
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @param TGFactory
+	 * @return a new TGBeat
+	 */
 	public TGBeat clone(TGFactory factory){
 		TGBeat beat = factory.newBeat();
 		beat.copyFrom(this, factory);
 		return beat;
 	}
 
+	/**
+	 *  Doc
+	 *
+	 * @param  TGBeat
+	 * @return something
+	 */
 	@Override
 	public int compareTo(TGBeat beat) {
 		if (beat == null) return 1;

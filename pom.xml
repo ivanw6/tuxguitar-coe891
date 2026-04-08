@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>tuxguitar-coe891</groupId>
+	<artifactId>tuxguitar-coe891-chatunitest</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>common/TuxGuitar-lib</module>
+	</modules>
+
+	<properties>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.9.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.zju-aces-ise</groupId>
+			<artifactId>chatunitest-starter</artifactId>
+			<version>2.1.1</version>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<pluginRepositories>
+    <pluginRepository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </pluginRepository>
+</pluginRepositories>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.1.2</version>
+					<configuration>
+						<useModulePath>false</useModulePath>
+						<includes>
+							<include>**/*Test.java</include>
+							<include>**/*Tests.java</include>
+							<include>**/*TestCase.java</include>
+							<include>**/*Suite.java</include>
+						</includes>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>io.github.zju-aces-ise</groupId>
+					<artifactId>chatunitest-maven-plugin</artifactId>
+					<version>2.1.1</version>
+					<configuration>
+						<apiKeys>dummy-key</apiKeys>
+						<model>codeqwen:v1.5-chat</model>
+						<url>http://localhost:11434/v1/chat/completions</url>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
